@@ -1,7 +1,6 @@
-https://e-souk-electronics.onrender.com
+https://smart-code-ne4r.onrender.com
 
-
-email: electronics@gmail.com
+email: buy-site@gmail.com
 password: 11111111
 
-https://e-souk-electronics.onrender.com/admin-orders.html
+https://smart-code-ne4r.onrender.com/admin-orders.html
