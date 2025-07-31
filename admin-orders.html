@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>إدارة الطلبات</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    /* إعدادات عامة للصفحة */
+    body {
+      font-family: 'Tajawal', sans-serif;
+      background: linear-gradient(135deg, #f9ffe6 0%, #ffdede 50%);
+      min-height: 100vh;
+    }
+
+    /* بطاقة الطلبات */
+    .orders-card {
+      backdrop-filter: blur(10px);
+      background: rgba(255, 255, 255, 0.95);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    /* جدول الطلبات */
+    .table-hover tbody tr:hover {
+      background-color: rgba(0, 123, 255, 0.05);
+    }
+
+    .table-responsive {
+      overflow-x: auto;
+    }
+
+    .table th, .table td {
+      padding: 0.75rem;
+      vertical-align: middle;
+    }
+
+    .status-column {
+      min-width: 150px;
+      white-space: nowrap;
+    }
+
+    .product-img {
+      width: 50px;
+      height: 50px;
+      object-fit: cover;
+    }
+
+    /* بطاقات الإحصائيات */
+    .card-stats,
+    .card.bg-success,
+    .card.bg-warning,
+    .card.bg-info,
+    .card.bg-secondary {
+      border: 0;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      color: white;
+      width: 100%; /* توحيد العرض داخل الحاوية */
+    }
+
+    .card-stats .card-body,
+    .card.bg-success .card-body,
+    .card.bg-warning .card-body,
+    .card.bg-info .card-body,
+    .card.bg-secondary .card-body {
+      padding: 0.75rem;
+    }
+
+    .card-stats .h2,
+    .card.bg-success .h2,
+    .card.bg-warning .h2,
+    .card.bg-info .h2 {
+      font-size: 1.25rem;
+      font-weight: bold;
+    }
+
+    .card.bg-secondary .fs-5 {
+      font-size: 0.9rem; /* تقليل حجم الخط لمعرف البائع */
+      line-height: 1.2; /* تقليل المسافة بين السطرين */
+      white-space: nowrap; /* منع التفاف النص */
+      overflow: hidden; /* إخفاء النص الزائد */
+      text-overflow: ellipsis; /* إضافة نقاط للنص الطويل */
+      max-width: 150px; /* تحديد أقصى عرض للنص */
+    }
+
+    .card-title.fs-6 {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    .stats-icon {
+      font-size: 1.5rem;
+      opacity: 0.8;
+    }
+
+    /* أزرار التفاعل */
+    .btn-gradient {
+      background: linear-gradient(45deg, #667eea, #764ba2);
+      border: none;
+      color: white;
+    }
+
+    .btn-gradient:hover {
+      background: linear-gradient(45deg, #5a6fd8, #6a4190);
+      color: white;
+    }
+
+    .action-buttons {
+      display: flex;
+      flex-row: nowrap;
+      gap: 0.5rem;
+    }
+
+    .action-buttons .btn {
+      padding: 0.25rem 0.5rem;
+      font-size: 0.75rem;
+    }
+
+    /* زر النسخ */
+    .copy-client-id-btn {
+      padding: 0.2rem;
+    }
+
+    .copy-client-id-btn .fa-copy {
+      font-size: 0.8rem;
+    }
+
+    /* زر التحديث العائم */
+    .floating-action {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      z-index: 1000;
+    }
+
+    /* مدخلات الفلترة */
+    .date-input {
+      width: 150px;
+    }
+
+    .form-control, .form-select {
+      font-size: 0.9rem;
+    }
+
+    /* التنسيق للشاشات الكبيرة (≥1200px) */
+    @media (min-width: 1200px) {
+      .col-xl-2 {
+        flex: 0 0 auto;
+        width: 20%; /* توزيع متساوٍ للبطاقات */
+      }
+    }
+
+    /* التنسيق للشاشات المتوسطة والصغيرة */
+    @media (max-width: 1199.98px) {
+      .card-stats .h2,
+      .card.bg-success .h2,
+      .card.bg-warning .h2,
+      .card.bg-info .h2,
+      .card.bg-secondary .fs-5 {
+        font-size: 1.1rem;
+      }
+
+      .card.bg-secondary .fs-5 {
+        font-size: 0.85rem; /* تقليل إضافي للشاشات المتوسطة */
+        max-width: 120px; /* تقليل العرض للنص */
+      }
+
+      .copy-client-id-btn .fa-copy {
+        font-size: 0.7rem;
+      }
+    }
+
+    /* التنسيق للشاشات الصغيرة (768px وأقل) */
+    @media (max-width: 768px) {
+      .floating-action {
+        bottom: 15px;
+        right: 15px;
+      }
+
+      .card-stats .h2 {
+        font-size: 1.5rem;
+      }
+
+      .card-title {
+        font-size: 1.25rem;
+      }
+
+      .form-control, .form-select {
+        font-size: 0.85rem;
+      }
+
+      .btn-sm {
+        font-size: 0.8rem;
+        padding: 0.25rem 0.5rem;
+      }
+
+      .table th:not(.status-column),
+      .table td:not(.status-column) {
+        font-size: 0.875rem;
+        padding: 0.5rem;
+      }
+
+      .status-column {
+        min-width: 120px;
+      }
+
+      .table th:nth-child(4),
+      .table td:nth-child(4),
+      .table th:nth-child(5),
+      .table td:nth-child(5) {
+        display: none;
+      }
+
+      .product-img {
+        width: 40px;
+        height: 40px;
+      }
+
+      .date-input {
+        width: 120px;
+      }
+
+      .action-buttons {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .action-buttons .btn {
+        width: 100%;
+        text-align: center;
+      }
+
+      .card.bg-secondary .fs-5 {
+        font-size: 0.8rem; /* تقليل حجم الخط للشاشات الصغيرة */
+        max-width: 100px; /* تقليل العرض للنص */
+      }
+    }
+
+    /* التنسيق للشاشات الصغيرة جدًا (576px وأقل) */
+    @media (max-width: 576px) {
+      .navbar-brand {
+        font-size: 1rem;
+      }
+
+      .card-header {
+        padding: 0.75rem;
+      }
+
+      .btn-group .btn,
+      .btn-group .form-control,
+      .btn-group .form-select {
+        font-size: 0.75rem;
+      }
+
+      .date-input {
+        width: 100%;
+        margin-bottom: 0.5rem;
+      }
+
+      .card.bg-secondary .fs-5 {
+        font-size: 0.75rem; /* تقليل إضافي للشاشات الصغيرة جدًا */
+        max-width: 80px; /* تقليل العرض للنص */
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Orders Section -->
+  <div id="ordersSection" class="d-none">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary bg-gradient shadow-sm">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">
+          <i class="fas fa-shopping-cart me-2"></i>إدارة الطلبات
+        </a>
+        <div class="navbar-nav ms-auto">
+          <div class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+              <i class="fas fa-user-circle me-1"></i>الأدمن
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li><a class="dropdown-item" href="admin-delivery-prices.html"><i class="fas fa-truck me-2"></i>إدارة أسعار التوصيل</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item text-danger" href="#" id="logoutBtn"><i class="fas fa-sign-out-alt me-2"></i>تسجيل الخروج</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container-fluid py-4"> 
+      <div class="row g-3 mb-4 row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-5">
+        <!-- الطلبات الملغاة -->
+        <div class="col">
+          <div class="card bg-danger border-0 shadow-sm card-equal h-100">
+            <div class="card-body text-white d-flex flex-column justify-content-between h-100">
+              <div>
+                <h5 class="card-title text-uppercase text-white-50 fs-6 mb-2">الطلبات الملغاة</h5>
+                <span class="h2 fw-bold" id="canceledOrders">0</span>
+              </div>
+              <div class="text-end mt-auto">
+                <i class="fas fa-times-circle stats-icon"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- الطلبات المكتملة -->
+        <div class="col">
+          <div class="card bg-success border-0 shadow-sm card-equal h-100">
+            <div class="card-body text-white d-flex flex-column justify-content-between h-100">
+              <div>
+                <h5 class="card-title text-uppercase text-white-50 fs-6 mb-2">الطلبات المكتملة</h5>
+                <span class="h2 fw-bold" id="completedOrders">0</span>
+              </div>
+              <div class="text-end mt-auto">
+                <i class="fas fa-check-circle stats-icon"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- الطلبات قيد المعالجة -->
+        <div class="col">
+          <div class="card bg-warning border-0 shadow-sm card-equal h-100">
+            <div class="card-body text-white d-flex flex-column justify-content-between h-100">
+              <div>
+                <h5 class="card-title text-uppercase text-white-50 fs-6 mb-2">الطلبات قيد المعالجة</h5>
+                <span class="h2 fw-bold" id="processingOrders">0</span>
+              </div>
+              <div class="text-end mt-auto">
+                <i class="fas fa-clock stats-icon"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- الطلبات قيد التوصيل -->
+        <div class="col">
+          <div class="card bg-info border-0 shadow-sm card-equal h-100">
+            <div class="card-body text-white d-flex flex-column justify-content-between h-100">
+              <div>
+                <h5 class="card-title text-uppercase text-white-50 fs-6 mb-2">الطلبات قيد التوصيل</h5>
+                <span class="h2 fw-bold" id="deliveringOrders">0</span>
+              </div>
+              <div class="text-end mt-auto">
+                <i class="fas fa-shipping-fast stats-icon"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- معرف البائع -->
+        <div class="col">
+          <div class="card bg-secondary border-0 shadow-sm card-equal h-100">
+            <div class="card-body text-white d-flex flex-column justify-content-between h-100">
+              <div>
+                <h5 class="card-title text-uppercase text-white-50 fs-6 mb-2">معرف البائع</h5>
+                <div class="client-id-wrapper">
+                  <span class="fw-bold fs-6 text-white flex-grow-1" id="clientId">1234567890ABCDEFGHIJKL</span>
+                </div>
+              </div> 
+              <div class="text-end mt-auto">
+                <i class="fas fa-id-card stats-icon"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card orders-card border-0 shadow">
+        <div class="card-header bg-white border-bottom">
+          <div class="row align-items-center">
+            <div class="col">
+              <h4 class="card-title mb-0 fw-bold text-primary">
+                <i class="fas fa-list-alt me-2"></i>قائمة الطلبات
+              </h4>
+            </div>
+            
+            <div class="col-auto">
+              <div class="btn-group flex-wrap" role="group">
+                <input type="date" class="form-control form-control-sm me-2 date-input" id="startDate" placeholder="تاريخ البدء">
+                <input type="date" class="form-control form-control-sm me-2 date-input" id="endDate" placeholder="تاريخ الانتهاء">
+                <select class="form-select form-select-sm me-2" id="statusFilter">
+                  <option value="">الكل</option>
+                  <option value="قيد المعالجة">قيد المعالجة</option>
+                  <option value="تم الشحن">تم الشحن</option>
+                  <option value="تم التوصيل">تم التوصيل</option>
+                  <option value="ملغى">ملغى</option>
+                </select>
+                <button type="button" class="btn btn-outline-success btn-sm" id="exportBtn">
+                  <i class="fas fa-download me-1"></i>تصدير
+                </button>
+                <button type="button" class="btn btn-primary btn-sm" id="refreshBtn">
+                  <i class="fas fa-sync-alt me-1"></i>تحديث
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="card-body p-0">
+          <div class="text-center py-5 d-none" id="loadingSpinner">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">جارٍ التحميل...</span>
+            </div>
+            <p class="text-muted mt-3 mb-0">جارٍ تحميل الطلبات...</p>
+          </div>
+          
+          <div class="table-responsive">
+            <table class="table table-hover align-middle">
+              <thead>
+                <tr>
+                  <th scope="col">اسم العميل</th>
+                  <th scope="col">المنتج</th>
+                  <th scope="col" class="text-center">الكمية</th>
+                  <th scope="col">الولاية</th>
+                  <th scope="col">المدينة</th>
+                  <th scope="col">رقم الهاتف</th>
+                  <th scope="col">طريقة التوصيل</th>
+                  <th scope="col" class="status-column">الحالة</th>
+                  <th scope="col">تاريخ الطلب</th>
+                  <th scope="col">الخيارات</th>
+                  <th scope="col">الإجراءات</th>
+                </tr>
+              </thead>
+              <tbody id="ordersTable">
+                <tr>
+                  <td colspan="10" class="text-center py-4">
+                    <div id="loadingSpinner" class="spinner-border" role="status">
+                      <span class="visually-hidden">جارٍ التحميل...</span>
+                    </div>
+                    <p>جارٍ تحميل الطلبات...</p>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        
+        <div class="card-footer bg-light border-top">
+          <div class="row align-items-center">
+            <div class="col">
+              <small class="text-muted" id="paginationInfo">عرض 0-0 من 0 طلبات</small>
+            </div>
+            <div class="col-auto">
+              <nav>
+                <ul class="pagination pagination-sm mb-0"></ul>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="floating-action d-none" id="floatingRefresh">
+      <button type="button" class="btn btn-primary btn-floating rounded-circle shadow" id="refreshBtnFloating">
+        <i class="fas fa-sync-alt"></i>
+      </button>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script type="module" src="js/config.js"></script>
+  <script type="module" src="js/admin/admin-orders-backend.js"></script>
+  <script src="js/admin/admin-orders-frontend.js"></script>
+  <script type="module" src="js/admin/admin-login.js"></script>
+</body>
+</html>

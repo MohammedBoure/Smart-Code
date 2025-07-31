@@ -1,0 +1,127 @@
+{
+  "categories": [
+    {
+      "categoryId": 1,
+      "name": "مواقع بيع أحذية",
+      "description": "مواقع جاهزة لعرض وبيع الأحذية بأنواعها، مع تصاميم موجهة لمختلف الفئات (رياضية، كلاسيكية، ماركات).",
+      "sites": [
+        {
+          "siteId": 1,
+          "themeName": "ثيم كلاسيكي",
+          "colors": [
+              "#1a1a1a",
+              "#2c3e50",
+              "#c9a96e",
+              "#f5f5f5" 
+          ],
+          "priceBeforeDiscount": 10000,
+          "priceAfterDiscount": 7500,
+          "images": [
+            "Sites/shoes/1.PNG",
+            "Sites/shoes/3.PNG",
+            "Sites/shoes/4.PNG",
+            "Sites/3.PNG",
+            "Sites/shoes/2.PNG",
+            "Sites/4.PNG"
+          ],
+          "siteUrl": "https://e-souk-shoes.onrender.com",
+          "dashboardUrl": "https://e-souk-shoes.onrender.com/admin-orders.html",
+          "loginEmail": "shoes@gmail.com",
+          "loginPassword": "11111111"
+        }
+      ]
+    },
+    {
+      "categoryId": 2,
+      "name": "مواقع بيع ملابس",
+      "description": "مواقع مخصصة لبيع الملابس الرجالية والنسائية، مع واجهات عرض مرنة للأنواع، الأحجام، والألوان.",
+      "sites": [
+        {
+          "siteId": 1,
+          "themeName": "ثيم كلاسيكي",
+          "colors": [
+              "#1a1a1a",
+              "#2c3e50",
+              "#c9a96e",
+              "#f5f5f5" 
+          ],
+          "priceBeforeDiscount": 9500,
+          "priceAfterDiscount": 7200,
+          "images": [
+            "Sites/clothes/1.PNG",
+            "Sites/clothes/2.PNG",
+            "Sites/clothes/3.PNG",
+            "Sites/clothes/4.PNG",
+            "Sites/3.PNG",
+            "Sites/4.PNG"
+          ],
+          "siteUrl": "https://e-souk-clothes.onrender.com",
+          "dashboardUrl": "https://e-souk-clothes.onrender.com/admin-orders.html",
+          "loginEmail": "clothes@gmail.com",
+          "loginPassword": "11111111"
+        }
+      ]
+    },
+    {
+      "categoryId": 3,
+      "name": "مواقع بيع إلكترونيات",
+      "description": "متاجر إلكترونية جاهزة لبيع الأجهزة الإلكترونية والملحقات، مع تصاميم مخصصة للمنتجات التقنية.",
+      "sites": [
+        {
+          "siteId": 1,
+          "themeName": "ثيم كلاسيكي",
+          "colors": [
+              "#1a1a1a",
+              "#2c3e50",
+              "#c9a96e",
+              "#f5f5f5" 
+          ],
+          "priceBeforeDiscount": 13000,
+          "priceAfterDiscount": 9900,
+          "images": [
+            "Sites/electronics/1.PNG",
+            "Sites/electronics/3.PNG",
+            "Sites/3.PNG",
+            "Sites/electronics/2.PNG",
+            "Sites/4.PNG"
+          ],
+          "siteUrl": "https://e-souk-electronics.onrender.com",
+          "dashboardUrl": "https://e-souk-electronics.onrender.com/admin-orders.html",
+          "loginEmail": "electronics@gmail.com",
+          "loginPassword": "11111111"
+        }
+      ]
+    },
+    {
+      "categoryId": 4,
+      "name": "مواقع عامة متعددة الاستخدام",
+      "description": "تصاميم مرنة تصلح لأي نوع من الأنشطة التجارية أو الخدمية، مع إمكانية تخصيص الأقسام حسب الحاجة.",
+      "sites": [
+        {
+          "siteId": 1,
+          "themeName": "ثيم كلاسيكي",
+          "colors": [
+              "#1a1a1a",
+              "#2c3e50",
+              "#c9a96e",
+              "#f5f5f5" 
+          ],
+          "priceBeforeDiscount": 8500,
+          "priceAfterDiscount": 6500,
+          "images": [
+            "Sites/general/1.PNG",
+            "Sites/general/3.PNG",
+            "Sites/4.PNG",
+            "Sites/general/2.PNG",
+            "Sites/3.PNG"
+            
+          ],
+          "siteUrl": "https://e-souk-supabase.onrender.com",
+          "dashboardUrl": "https://e-souk-supabase.onrender.com/admin-orders.html",
+          "loginEmail": "admin@gmail.com",
+          "loginPassword": "11111111"
+        }
+      ]
+    }
+  ]
+}
